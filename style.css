@@ -1189,3 +1189,13 @@ input.search::placeholder {
 .is-hidden-by-search {
   display: none !important;
 }
+/* ESCONDER PAINEL PRETO COM BOTÕES LATERAIS */
+
+.prototype-map {
+  display: none !important;
+}
+
+.app-shell {
+  justify-content: center;
+  gap: 0;
+}

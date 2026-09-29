@@ -385,7 +385,7 @@ const screens = {
 
       <div class="content">
         <section class="dashboard-hero">
-          <h1>Portal do Professor 👩‍🏫</h1>
+          <h1>Portal do Professor </h1>
           <p>Terça-feira, 17 de março</p>
 
           <div class="stats-grid">
