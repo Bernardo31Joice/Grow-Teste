@@ -792,8 +792,26 @@ const screens = {
         </div>
 
         <h2>Percentual de frequência</h2>
-        <div class="chart"></div>
-      </div>
+
+<div class="frequency-card">
+  <div class="frequency-info">
+    <div class="legend-item">
+      <span class="legend-color presence"></span>
+      <strong>presenças</strong>
+      <small>87%</small>
+    </div>
+
+    <div class="legend-item">
+      <span class="legend-color absence"></span>
+      <strong>faltas</strong>
+      <small>13%</small>
+    </div>
+  </div>
+
+  <div class="pie-chart">
+    <span>87%</span>
+  </div>
+</div>
     `;
   },
 
