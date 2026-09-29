@@ -486,7 +486,7 @@ button:hover {
 
 .course-card h3,
 .activity-card h3,
-.presence-card h3,
+.presence-card h4,
 .project-card h3 {
   margin: 0 0 5px;
   font-size: 16px;
