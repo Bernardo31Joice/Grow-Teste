@@ -59,9 +59,37 @@ function footer() {
 function topbar() {
   return `
     <div class="topbar">
-      <button class="menu" onclick="setScreen('role')">☰</button>
-      <input class="search" placeholder="🔍 Buscar..." />
-      <div class="avatar">👩</div>
+      <button class="menu menu-open" onclick="openSideMenu()">☰</button>
+      <input 
+        class="search" 
+        placeholder="🔍 Buscar..." 
+        oninput="filterCurrentScreen(this.value)" 
+      />
+    </div>
+
+    <div class="menu-overlay" onclick="closeSideMenu()"></div>
+
+    <aside class="side-menu">
+      <div class="side-head">
+        <div class="logo small-logo">GRW</div>
+
+        <div>
+          <h2 id="menuTitle">Menu</h2>
+          <p>Acesse as opções</p>
+        </div>
+
+        <button class="close-menu" onclick="closeSideMenu()">×</button>
+      </div>
+
+      <div class="menu-options" id="menuOptions"></div>
+
+      <button class="logout-btn" onclick="logout()">
+        ↪ SAIR
+      </button>
+    </aside>
+
+    <div class="search-empty" id="searchEmpty">
+      Nenhum resultado encontrado.
     </div>
   `;
 }
@@ -1101,3 +1129,202 @@ window.addEventListener("load", () => {
     menuOverlay.classList.remove("active");
   }
 });
+/* =========================
+   MENU LATERAL E BUSCA
+========================= */
+
+const menuByRole = {
+  PROFESSOR: [
+    {
+      title: "Portal do Professor",
+      desc: "Voltar para o painel inicial",
+      screen: "teacherDashboard",
+      icon: "⌂"
+    },
+    {
+      title: "Presença",
+      desc: "Gerenciar presença das turmas",
+      screen: "teacherPresence",
+      icon: "✓"
+    },
+    {
+      title: "Atividades",
+      desc: "Publicar e corrigir atividades",
+      screen: "teacherActivities",
+      icon: "▤"
+    }
+  ],
+
+  ALUNO: [
+    {
+      title: "Meus Cursos",
+      desc: "Ver cursos disponíveis",
+      screen: "studentDashboard",
+      icon: "▣"
+    },
+    {
+      title: "Mural",
+      desc: "Acessar avisos da turma",
+      screen: "studentCourse",
+      icon: "☰"
+    },
+    {
+      title: "Atividades",
+      desc: "Pendentes e entregues",
+      screen: "studentActivities",
+      icon: "▤"
+    },
+    {
+      title: "Painel",
+      desc: "Ranking e desempenho",
+      screen: "studentPanel",
+      icon: "★"
+    },
+    {
+      title: "Presença",
+      desc: "Registrar presença",
+      screen: "studentPresence",
+      icon: "✓"
+    }
+  ],
+
+  VOLUNTÁRIO: [
+    {
+      title: "Início",
+      desc: "Painel institucional",
+      screen: "volDashboard",
+      icon: "⌂"
+    },
+    {
+      title: "Projetos",
+      desc: "Acompanhar projetos ativos",
+      screen: "volProjects",
+      icon: "▣"
+    },
+    {
+      title: "Tempo",
+      desc: "Registrar horas",
+      screen: "volTime",
+      icon: "◷"
+    },
+    {
+      title: "Documentos",
+      desc: "Acessar certificados e arquivos",
+      screen: "volDocs",
+      icon: "▤"
+    }
+  ]
+};
+
+function openSideMenu() {
+  const overlay = document.querySelector(".menu-overlay");
+  const sideMenu = document.querySelector(".side-menu");
+  const menuOptions = document.querySelector("#menuOptions");
+  const menuTitle = document.querySelector("#menuTitle");
+
+  if (!overlay || !sideMenu || !menuOptions || !menuTitle) {
+    return;
+  }
+
+  const role = state.role || "PROFESSOR";
+  const items = menuByRole[role] || menuByRole.PROFESSOR;
+
+  if (role === "PROFESSOR") {
+    menuTitle.textContent = "Menu Professor";
+  } else if (role === "ALUNO") {
+    menuTitle.textContent = "Menu Aluno";
+  } else {
+    menuTitle.textContent = "Menu Voluntário";
+  }
+
+  menuOptions.innerHTML = items.map(item => `
+    <button class="menu-item" onclick="menuNavigate('${item.screen}')">
+      <span class="menu-icon">${item.icon}</span>
+      <span>
+        <b>${item.title}</b>
+        <small>${item.desc}</small>
+      </span>
+    </button>
+  `).join("");
+
+  overlay.classList.add("active");
+  sideMenu.classList.add("active");
+}
+
+function closeSideMenu() {
+  const overlay = document.querySelector(".menu-overlay");
+  const sideMenu = document.querySelector(".side-menu");
+
+  if (overlay) {
+    overlay.classList.remove("active");
+  }
+
+  if (sideMenu) {
+    sideMenu.classList.remove("active");
+  }
+}
+
+function menuNavigate(screenName) {
+  closeSideMenu();
+  setScreen(screenName);
+}
+
+function logout() {
+  closeSideMenu();
+  state.role = "PROFESSOR";
+  state.selectedCourse = "Academic English";
+  setScreen("role");
+}
+
+/* =========================
+   BUSCA BÁSICA
+========================= */
+
+function filterCurrentScreen(value) {
+  const term = value.trim().toLowerCase();
+  const currentScreen = document.querySelector("#screen");
+
+  if (!currentScreen) {
+    return;
+  }
+
+  const items = currentScreen.querySelectorAll(`
+    .course-card,
+    .activity-card,
+    .presence-card,
+    .student-card,
+    .project-card,
+    .doc-card,
+    .vol-card,
+    .quick-card,
+    .stat,
+    .white-card,
+    .ranking,
+    .notice,
+    .certified
+  `);
+
+  const emptyMessage = document.querySelector("#searchEmpty");
+  let found = 0;
+
+  items.forEach(item => {
+    const text = item.innerText.toLowerCase();
+    const match = text.includes(term);
+
+    if (!term || match) {
+      item.classList.remove("is-hidden-by-search");
+      found++;
+    } else {
+      item.classList.add("is-hidden-by-search");
+    }
+  });
+
+  if (emptyMessage) {
+    if (term && found === 0) {
+      emptyMessage.classList.add("active");
+      emptyMessage.textContent = `Nenhum resultado encontrado para: ${value}`;
+    } else {
+      emptyMessage.classList.remove("active");
+    }
+  }
+}
