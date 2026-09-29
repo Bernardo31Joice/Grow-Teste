@@ -1089,3 +1089,15 @@ document.querySelectorAll("[data-go]").forEach(button => {
 });
 
 setScreen("role");
+window.addEventListener("load", () => {
+  const sideMenu = document.getElementById("sideMenu");
+  const menuOverlay = document.getElementById("menuOverlay");
+
+  if (sideMenu) {
+    sideMenu.classList.remove("active");
+  }
+
+  if (menuOverlay) {
+    menuOverlay.classList.remove("active");
+  }
+});
