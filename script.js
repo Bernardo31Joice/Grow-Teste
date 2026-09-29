@@ -214,60 +214,13 @@ function activityList(done = false, student = false) {
 }
 
 const screens = {
-  start() {
-  wrapMint(`
-    ${logo()}
-
-    <div class="login-card">
-      <h2>Bem-vindo ao AVA Grow</h2>
-
-      <p>
-        Acesse sua conta ou faça seu cadastro para entrar na plataforma educacional.
-      </p>
-
-      <button class="primary blue" onclick="setScreen('welcome')">
-        Fazer Login
-      </button>
-
-      <button class="primary" onclick="setScreen('role')">
-        Fazer Cadastro
-      </button>
-    </div>
-
-    ${footer()}
-  `);
-},
-
-welcome() {
-  wrapMint(`
-    ${logo()}
-
-    <div class="login-card welcome-card">
-      <h2>Bem-vindo!</h2>
-
-      <p>
-        Que bom ter você aqui novamente. Clique abaixo para acessar sua conta.
-      </p>
-
-      <button class="primary blue" onclick="setScreen('login')">
-        Ir para Login
-      </button>
-
-      <button class="ghost" onclick="setScreen('start')">
-        Voltar
-      </button>
-    </div>
-
-    ${footer()}
-  `);
-},
   role() {
     wrapMint(`
       ${logo()}
 
       <div class="login-card">
-        <h2>Cadastro</h2>
-        <p>Antes de continuar, precisamos saber em qual das opções abaixo você se encaixa.</p>
+        <h2>Bem-vindo de volta!</h2>
+        <p>Antes de começar, precisamos saber em qual das opções abaixo você se encaixa.</p>
 
         ${["PROFESSOR", "ALUNO", "VOLUNTÁRIO"].map(role => `
           <div class="choice-row">
@@ -280,12 +233,18 @@ welcome() {
           </div>
         `).join("")}
 
-        <button class="primary" onclick="goRegisterByRole()">Continuar cadastro</button>
+        <button class="primary" onclick="setScreen('login')">Entrar</button>
 
         <button class="ghost" onclick="setScreen('recover')">
           Esqueceu sua senha?
         </button>
-        <button class="ghost" onclick="setScreen('start')"> Voltar
+
+        <button class="ghost" onclick="setScreen('studentRegister')">
+          Cadastro aluno
+        </button>
+
+        <button class="ghost" onclick="setScreen('volunteerRegister')">
+          Cadastro voluntário
         </button>
       </div>
 
@@ -345,47 +304,6 @@ welcome() {
       ${footer()}
     `);
   },
-  teacherRegister() {
-  wrapMint(`
-    <div class="form-card">
-      <h2>Cadastro do professor</h2>
-
-      ${formBase()}
-
-      <div class="field">
-        <label>Área de atuação</label>
-        <div class="input-row">
-          ▣ <input placeholder="Ex: Inglês, Matemática, Programação">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Formação</label>
-        <div class="input-row">
-          ▣ <input placeholder="Digite sua formação">
-        </div>
-      </div>
-
-      <div class="radio-group">
-        <b>Disponibilidade para aulas:</b>
-
-        <label><input type="radio" name="disp-prof"> Manhã</label>
-        <label><input type="radio" name="disp-prof"> Tarde</label>
-        <label><input type="radio" name="disp-prof"> Noite</label>
-      </div>
-
-      <button class="primary blue" onclick="setScreen('teacherDashboard')">
-        Finalizar cadastro
-      </button>
-
-      <button class="ghost" onclick="setScreen('role')">
-        Voltar
-      </button>
-    </div>
-
-    ${footer()}
-  `);
-},
 
   studentRegister() {
     wrapMint(`
@@ -1373,7 +1291,7 @@ function logout() {
   closeSideMenu();
   state.role = "PROFESSOR";
   state.selectedCourse = "Academic English";
-  setScreen("start");
+  setScreen("role");
 }
 
 /* =========================
@@ -1426,14 +1344,5 @@ function filterCurrentScreen(value) {
     } else {
       emptyMessage.classList.remove("active");
     }
-  }
-}
-function goRegisterByRole() {
-  if (state.role === "ALUNO") {
-    setScreen("studentRegister");
-  } else if (state.role === "VOLUNTÁRIO") {
-    setScreen("volunteerRegister");
-  } else {
-    setScreen("teacherRegister");
   }
 }
