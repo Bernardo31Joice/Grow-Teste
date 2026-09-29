@@ -1199,3 +1199,32 @@ input.search::placeholder {
   justify-content: center;
   gap: 0;
 }
+/* =========================
+   LOGO OFICIAL GROW
+   Substitui a logo criada no código
+========================= */
+
+.logo {
+  width: 74px !important;
+  height: 74px !important;
+  border-radius: 50% !important;
+  background: #ffffff url("Logo.png") center / cover no-repeat !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  border: none !important;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Logo menor usada no menu lateral */
+.logo.small-logo,
+.side-head .logo,
+.side-head .small-logo {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  border-radius: 50% !important;
+  background: #ffffff url("Logo.png") center / cover no-repeat !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  border: none !important;
+}
