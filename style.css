@@ -1313,3 +1313,7 @@ input.search::placeholder {
   font-weight: 900;
   color: #172033;
 }
+.welcome-card .primary,
+.login-card .primary {
+  margin-top: 12px;
+}
